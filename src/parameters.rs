@@ -11,7 +11,7 @@ use crate::{
     sharing::Vandermonde,
 };
 
-#[cfg(feature = "experimental-dkg")]
+#[cfg(any(feature = "experimental-dkg", feature = "experimental-mpc"))]
 use crate::Identifier;
 
 /// An invalid or unrepresentable protocol parameter.
@@ -99,6 +99,12 @@ pub struct Config {
 pub enum KeyOrigin {
     /// The original paper's dealer profile and parameter encoding version 1.
     TrustedDealer,
+    /// Experimental sigma=1 dealer-equivalent MPC, with a distinct transcript encoding.
+    #[cfg(feature = "experimental-mpc")]
+    ExperimentalMpc {
+        /// Application-agreed fresh invocation identifier.
+        session: Identifier,
+    },
     /// Experimental DKG profile with explicit checked local contribution limits.
     #[cfg(feature = "experimental-dkg")]
     ExperimentalDkg {
@@ -182,13 +188,16 @@ impl Parameters {
         let dealer_secret_bound = secret_scale
             * sqrt_ceil(dimension)
             * (1 + (u128::from(config.refresh_limit) + 1) * sqrt_ceil(depth));
+        let dealer_bounds = (
+            dealer_secret_bound,
+            alpha
+                * u128::from(config.nonce_sigma)
+                * sqrt_ceil(dimension * config.repetitions as u128),
+        );
         let (secret_bound, nonce_bound) = match origin {
-            KeyOrigin::TrustedDealer => (
-                dealer_secret_bound,
-                alpha
-                    * u128::from(config.nonce_sigma)
-                    * sqrt_ceil(dimension * config.repetitions as u128),
-            ),
+            KeyOrigin::TrustedDealer => dealer_bounds,
+            #[cfg(feature = "experimental-mpc")]
+            KeyOrigin::ExperimentalMpc { .. } => dealer_bounds,
             #[cfg(feature = "experimental-dkg")]
             KeyOrigin::ExperimentalDkg {
                 contribution_limit, ..
@@ -232,6 +241,23 @@ impl Parameters {
         })
     }
 
+    /// Creates the restricted MPC prototype profile and binds its fresh session.
+    ///
+    /// This metadata constructor does not certify execution of MPC. The prototype
+    /// supports sigma=1, 2-of-4 signing, and no refresh; MPC output owns the keys.
+    #[cfg(feature = "experimental-mpc")]
+    pub fn for_mpc(config: Config, session: Identifier) -> Result<Self, Error> {
+        if config.committee.parties() != 4
+            || config.committee.threshold() != 2
+            || config.secret_sigma != 1
+            || config.refresh_limit != 0
+            || session == [0; 64]
+        {
+            return Err(Error::DkgMismatch);
+        }
+        Self::build(config, KeyOrigin::ExperimentalMpc { session })
+    }
+
     /// Returns the key provenance bound into this profile's encoding.
     pub fn origin(&self) -> KeyOrigin {
         self.origin
@@ -272,6 +298,8 @@ impl Parameters {
         let c = &self.config;
         let version = match self.origin {
             KeyOrigin::TrustedDealer => 1,
+            #[cfg(feature = "experimental-mpc")]
+            KeyOrigin::ExperimentalMpc { .. } => 3,
             #[cfg(feature = "experimental-dkg")]
             KeyOrigin::ExperimentalDkg { .. } => 2,
         };
@@ -311,6 +339,14 @@ impl Parameters {
             {
                 bytes.extend_from_slice(&contribution_limit.to_le_bytes());
                 bytes.extend_from_slice(&output);
+            }
+            bytes
+        };
+        #[cfg(feature = "experimental-mpc")]
+        let bytes = {
+            let mut bytes: Vec<u8> = bytes;
+            if let KeyOrigin::ExperimentalMpc { session } = self.origin {
+                bytes.extend_from_slice(&session);
             }
             bytes
         };

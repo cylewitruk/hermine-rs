@@ -14,6 +14,8 @@ use crate::{
 #[cfg(feature = "experimental-dkg")]
 mod dkg;
 mod keys;
+#[cfg(feature = "experimental-mpc")]
+mod mpc;
 mod refresh;
 mod signing;
 mod support;
@@ -22,6 +24,8 @@ pub mod wire;
 #[cfg(feature = "experimental-dkg")]
 pub use dkg::ParticipantKeys;
 pub use keys::dealer_keygen;
+#[cfg(feature = "experimental-mpc")]
+pub use mpc::assemble_mpc;
 pub use refresh::dealer_refresh;
 
 /// A 512-bit domain-separated identifier for keys, epochs, or signing sessions.
@@ -33,7 +37,7 @@ pub type Coefficients = Vec<Vec<u64>>;
 /// A malformed message, failed verification, or local execution failure.
 #[derive(Debug)]
 pub enum Error {
-    /// Dealer generation was requested with a profile bound to a DKG output.
+    /// Dealer generation was requested with a DKG or MPC profile.
     KeyOrigin,
     /// A DKG preprocessing pair exceeds its explicit checked norm bound.
     NonceBound,

@@ -10,6 +10,7 @@ publish = false
 
 [features]
 experimental-dkg = []
+experimental-mpc = []
 
 [dependencies]
 rand_core = "0.10.1"
@@ -43,6 +44,10 @@ required-features = ["experimental-dkg"]
 [[example]]
 name = "dkg_transport"
 required-features = ["experimental-dkg"]
+
+[[example]]
+name = "mpc"
+required-features = ["experimental-mpc"]
 
 [lints.rust]
 unsafe_code = "forbid"

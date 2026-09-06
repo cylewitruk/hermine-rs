@@ -95,3 +95,14 @@ ownership cannot prevent process forks or snapshot rollback. Persistent private
 shares and nonces therefore have no serialization API; durable accounting and
 recovery require an additional design. No production deployment readiness is
 claimed by completion of this implementation goal.
+
+## Experimental MPC addition (2026-09-06)
+
+The `experimental-mpc` feature adds a four-party dealer-circuit prototype.
+[MPC validation and limits](MPC.md) describe its ideal communication model, exact
+sampler certificate, fault tests, all six signing subsets, and measured costs.
+The combined suite passes 121 tests on Rust 1.98 and Rust 1.96, nine MSRV
+Rustdoc tests, and the 90% CI coverage gate (94.86% library line coverage).
+Clippy/Rustdoc pass with warnings denied, and all 16 independent fixture files
+remain unchanged. This addition does not change the security scope of the earlier
+dealer audit.

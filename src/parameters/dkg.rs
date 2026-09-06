@@ -63,6 +63,8 @@ impl Parameters {
     pub fn nonce_pair_bound(&self) -> Option<u64> {
         match self.origin {
             KeyOrigin::TrustedDealer => None,
+            #[cfg(feature = "experimental-mpc")]
+            KeyOrigin::ExperimentalMpc { .. } => None,
             KeyOrigin::ExperimentalDkg { .. } => {
                 let c = &self.config;
                 let dimension = c.ring.degree() as u128 * (c.rows + c.columns) as u128;

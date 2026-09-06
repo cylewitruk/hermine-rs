@@ -59,6 +59,7 @@ jobs:
           cargo +${{ matrix.toolchain }} run --locked --features experimental-dkg --example dkg
           cargo +${{ matrix.toolchain }} run --locked --features experimental-dkg --example dkg -- --uniform
           cargo +${{ matrix.toolchain }} run --locked --features experimental-dkg --example dkg_transport
+          cargo +${{ matrix.toolchain }} run --locked --features experimental-mpc --example mpc
 
   quality:
     name: Formatting, documentation, vectors, and coverage
@@ -87,6 +88,10 @@ jobs:
         run: python3 scripts/dkg_masking_model.py
       - name: Check integer Gaussian distribution research models
         run: python3 scripts/dkg_distribution_model.py
+      - name: Check interactive contribution research models
+        run: python3 scripts/dkg_interactive_model.py
+      - name: Certify MPC Gaussian table
+        run: python3 scripts/mpc_gaussian_table.py
       - name: Collect library coverage
         env:
           RUSTC_WRAPPER: ""

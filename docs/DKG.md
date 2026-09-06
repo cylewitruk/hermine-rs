@@ -35,6 +35,8 @@ participant must receive only its own confidential deliveries.
 | Signing/refresh bounds and material provenance | [DKG-COMPOSITION.md](DKG-COMPOSITION.md) |
 | Canonical transport, private buffers, and abort example | [DKG-WIRE.md](DKG-WIRE.md) |
 | Fiat–Shamir, simulation, and quantum proof gaps | [DKG-ORACLES.md](DKG-ORACLES.md) |
+| All-online interactive DKG investigation and MPC alternative | [DKG-INTERACTIVE.md](DKG-INTERACTIVE.md) |
+| Proposed direct-delivery contribution and conditional lemmas | [DKG-INTERACTIVE-CONTRIBUTION.md](DKG-INTERACTIVE-CONTRIBUTION.md) |
 | Short-share leakage, convolution, and completeness | [DKG-DISTRIBUTION.md](DKG-DISTRIBUTION.md) |
 | Reproducible phase timings and byte accounting | [DKG-BENCHMARKS.md](DKG-BENCHMARKS.md) |
 | Construction review and requirement audit | [DKG-REVIEW.md](DKG-REVIEW.md) |

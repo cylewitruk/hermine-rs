@@ -5,6 +5,12 @@ classical or quantum security proof. The fixed-projection identity in
 [DKG-UNIFORM-MASK.md](DKG-UNIFORM-MASK.md) does not justify replacing an independent
 challenge with a hash of commitments by itself.
 
+The [interactive investigation](DKG-INTERACTIVE.md) evaluates a separate
+all-members-online design that avoids hash-derived contribution challenges.
+It also records why the pinned Hermine signing proof needs its own quantum-oracle
+analysis. Neither change closes the security obligations of the implemented
+hash-derived candidates described here.
+
 ## Fiat–Shamir and lattice schemes
 
 Fiat–Shamir is compatible with lattice cryptography. ML-DSA uses the

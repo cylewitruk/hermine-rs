@@ -51,6 +51,17 @@ cargo run --features experimental-dkg --example dkg -- --uniform
 cargo run --features experimental-dkg --example dkg_transport
 ```
 
+A separate [dealer-equivalent MPC prototype](docs/MPC.md) uses four-party
+Maurer replicated sharing, a secret bounded Gaussian circuit, and 2-of-4 signing.
+The `experimental-mpc` feature includes independent actors over an ideal local
+transport, tests, and exact-arithmetic sampler certification. It targets one
+static malicious participant; network deployment and security proofs remain open.
+
+```sh
+cargo run --release --features experimental-mpc --example mpc
+python3 scripts/mpc_gaussian_table.py
+```
+
 ## Development
 
 Requires Rust 1.96 or later and cargo-nextest.

@@ -26,6 +26,9 @@ pub mod transcript;
 #[cfg(feature = "experimental-dkg")]
 pub mod dkg;
 
+#[cfg(feature = "experimental-mpc")]
+pub mod mpc;
+
 mod protocol;
 pub use protocol::wire;
 pub use protocol::{
