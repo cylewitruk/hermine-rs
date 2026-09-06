@@ -1,0 +1,36 @@
+[package]
+name = "hermine-fuzz"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4.13"
+hermine = { path = "..", features = ["experimental-dkg"] }
+
+[[bin]]
+name = "wire_messages"
+path = "fuzz_targets/wire_messages.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ring_differential"
+path = "fuzz_targets/ring_differential.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dkg_messages"
+path = "fuzz_targets/dkg_messages.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]

@@ -1,0 +1,55 @@
+[package]
+name = "hermine"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.96"
+description = "A paper-driven Rust implementation of Hermine threshold signatures"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/cylewitruk/hermine-rs"
+publish = false
+
+[features]
+experimental-dkg = []
+
+[dependencies]
+rand_core = "0.10.1"
+shake = { version = "0.1", default-features = false, features = ["zeroize"] }
+zeroize = "1.9"
+
+[dev-dependencies]
+rand = { version = "0.10.2", default-features = false, features = ["std_rng", "sys_rng"] }
+
+[[bench]]
+name = "protocol"
+harness = false
+
+[[bench]]
+name = "dkg"
+harness = false
+required-features = ["experimental-dkg"]
+
+[[example]]
+name = "dkg_projection"
+required-features = ["experimental-dkg"]
+
+[[example]]
+name = "dkg_contribution"
+required-features = ["experimental-dkg"]
+
+[[example]]
+name = "dkg"
+required-features = ["experimental-dkg"]
+
+[[example]]
+name = "dkg_transport"
+required-features = ["experimental-dkg"]
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "deny"
+
+[lints.clippy]
+all = "warn"
+
+[profile.release]
+overflow-checks = true
